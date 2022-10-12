@@ -3,22 +3,36 @@ import { ref, reactive, computed } from "vue";
 import Button from "primevue/button";
 import InputText from "primevue/inputtext";
 
+import useVuelidate from "@vuelidate/core";
+import { required, GLOBAL_CONFIG } from "@/utils/validators";
+
 import { useTodoListStore } from "@/store/ToDoList";
 
 import TriStateButton from "./components/TriStateButton.vue";
-const newTask = ref("");
+
+const taskForm = reactive({
+  newTask: "",
+});
 
 const filterTypes = ["pi-sort-alt", "pi-sort-alpha-down", "pi-sort-alpha-up-alt"];
 const filterType = ref(0);
 const nameFilter = ref("");
 
 const store = useTodoListStore();
+const rules = {
+  newTask: { required },
+};
+const $v = useVuelidate(rules, taskForm, GLOBAL_CONFIG);
 
-const createNewTask = () => {
-  if (newTask.length === 0) return;
+const createNewTask = async () => {
+  const isFormCorrect = await $v.value.$validate();
 
-  store.addTodo(newTask.value);
-  newTask.value = "";
+  if (!isFormCorrect) return;
+
+  store.addTodo(taskForm.newTask);
+  taskForm.newTask = "";
+
+  $v.value.$reset();
 };
 
 const compare = (a, b) => {
@@ -52,7 +66,15 @@ const filteredList = computed(() => {
         @submit.prevent="createNewTask"
       >
         <div class="flex-grow-1">
-          <InputText v-model="newTask" class="w-full" placeholder="Enter task name" />
+          <InputText
+            v-model="taskForm.newTask"
+            class="w-full"
+            placeholder="Enter task name *"
+            :class="{ 'p-invalid': $v.newTask.$error }"
+          />
+          <small v-if="$v.newTask.$error" class="p-error">
+            {{ $v.newTask.$errors[0].$message }}
+          </small>
         </div>
         <div>
           <Button label="Add Task" type="submit" icon="pi pi-plus" />
@@ -65,7 +87,7 @@ const filteredList = computed(() => {
           <InputText
             v-model="nameFilter"
             class="p-inputtext-sm"
-            placeholder="Search eg: Name, Description.."
+            placeholder="Search task"
           />
         </span>
         <TriStateButton v-model="filterType" :icon-names="filterTypes" />
@@ -108,8 +130,8 @@ body {
 
 <style scoped>
 .mainSection {
-  min-width: 30rem;
-  max-width: 30rem;
+  min-width: 32rem;
+  max-width: 32rem;
 }
 
 .taskContent {
