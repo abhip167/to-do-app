@@ -69,7 +69,7 @@ const filteredList = computed(() => {
           <InputText
             v-model="taskForm.newTask"
             class="w-full"
-            placeholder="Enter task name *"
+            placeholder="* Enter task name"
             :class="{ 'p-invalid': $v.newTask.$error }"
           />
           <small v-if="$v.newTask.$error" class="p-error">
