@@ -10,20 +10,27 @@ import { useTodoListStore } from "@/store/ToDoList";
 
 import TriStateButton from "./components/TriStateButton.vue";
 
+// Constants
+const filterTypes = ["pi-sort-alt", "pi-sort-alpha-down", "pi-sort-alpha-up-alt"];
+const rules = {
+  newTask: { required },
+};
+
+// Reactive variables
 const taskForm = reactive({
   newTask: "",
 });
 
-const filterTypes = ["pi-sort-alt", "pi-sort-alpha-down", "pi-sort-alpha-up-alt"];
 const filterType = ref(0);
 const nameFilter = ref("");
 
+// Store
 const store = useTodoListStore();
-const rules = {
-  newTask: { required },
-};
+
+// Validation - vuelidate
 const $v = useVuelidate(rules, taskForm, GLOBAL_CONFIG);
 
+// Methods
 const createNewTask = async () => {
   const isFormCorrect = await $v.value.$validate();
 
@@ -44,6 +51,7 @@ const compare = (a, b) => {
   }
   return 0;
 };
+
 const filteredList = computed(() => {
   const filtered =
     store.todoList.filter((el) =>
@@ -61,9 +69,11 @@ const filteredList = computed(() => {
     </header>
 
     <div class="mainSection">
+      <!-- New task form-->
       <form
         class="flex justify-content-between gap-3 mt-4"
         @submit.prevent="createNewTask"
+        id="newTaskForm"
       >
         <div class="flex-grow-1">
           <InputText
@@ -71,8 +81,13 @@ const filteredList = computed(() => {
             class="w-full"
             placeholder="* Enter task name"
             :class="{ 'p-invalid': $v.newTask.$error }"
+            id="newTask-input"
           />
-          <small v-if="$v.newTask.$error" class="p-error">
+          <small
+            v-if="$v.newTask.$error"
+            class="p-error"
+            aria-label="new-task error message"
+          >
             {{ $v.newTask.$errors[0].$message }}
           </small>
         </div>
@@ -81,6 +96,7 @@ const filteredList = computed(() => {
         </div>
       </form>
 
+      <!-- Search and sort-->
       <div class="flex justify-content-between mt-4">
         <span class="p-input-icon-left">
           <i class="pi pi-search" />
@@ -88,15 +104,19 @@ const filteredList = computed(() => {
             v-model="nameFilter"
             class="p-inputtext-sm"
             placeholder="Search task"
+            id="searchTask"
           />
         </span>
-        <TriStateButton v-model="filterType" :icon-names="filterTypes" />
+        <TriStateButton v-model="filterType" :icon-names="filterTypes" id="sortList" />
       </div>
-      <div class="flex flex-column mt-2 gap-2">
+
+      <!-- Task List -->
+      <div class="flex flex-column mt-2 gap-2" id="taskList">
         <div
           class="surface-card border-round flex justify-content-between align-items-center gap-4 p-2"
           v-for="(task, id) in filteredList"
           :key="id"
+          :id="`task-${id}`"
         >
           <div class="flex align-items-center gap-4">
             <div>
@@ -107,6 +127,8 @@ const filteredList = computed(() => {
           </div>
           <div>
             <Button
+              aria-label="delete-task"
+              :id="`delete-task-${id}`"
               @click.prevent="store.deleteTodo(task.id)"
               icon="pi pi-trash"
               class="p-button-rounded p-button-outlined p-button-danger p-button-sm"
@@ -119,6 +141,9 @@ const filteredList = computed(() => {
 </template>
 
 <style>
+/* Global Styles */
+
+/* Primeflex Css */
 @import "/node_modules/primeflex/primeflex.css";
 
 body {
@@ -129,6 +154,8 @@ body {
 </style>
 
 <style scoped>
+/* Private styles - only applied to current component */
+
 .mainSection {
   min-width: 32rem;
   max-width: 32rem;

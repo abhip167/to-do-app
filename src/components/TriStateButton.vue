@@ -1,6 +1,7 @@
 <script setup>
-import { ref, defineProps, defineEmits } from "vue";
+import { ref, defineEmits } from "vue";
 import Button from "primevue/button";
+
 const props = defineProps({
   modelValue: {
     type: Number,
