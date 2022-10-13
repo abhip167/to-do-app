@@ -33,6 +33,12 @@ The To-Do app contains basic implementation with below features :
 - To run the E2E test cases (code inside /cypress folder)
 
   - `npm run cypress:open` This will open cypress electron app and we can run tests in it.
+  - `npm run test` to show output in command line
+
+## Deploy build files
+
+- We will generate build files in dist folder by running the command `npm run build`. Once done, we shall now see a dist folder with index.html file
+- In order to deploy, we can deploy it on static file server by simply copying the contents of the dist folder in the root of the server.
 
 ## Tech Stack
 
@@ -126,4 +132,23 @@ const filteredList = computed(() => {
   │ Duration:     6 seconds                                                                        │
   │ Spec Ran:     sort.cy.js                                                                       │
   └────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+- If all tests are passed it should show result as below
+
+```
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ √  sort.cy.js                               00:05        3        3        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ √  spec.cy.js                               00:05        9        9        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ √  validation.cy.js                         00:02        1        1        -        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    √  All specs passed!                        00:14       13       13        -        -        -
 ```
