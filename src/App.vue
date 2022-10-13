@@ -166,4 +166,11 @@ body {
   line-height: 1.5;
   margin: 0;
 }
+
+@media only screen and (max-width: 768px) {
+  .mainSection {
+    min-width: 15rem;
+    max-width: 30rem;
+  }
+}
 </style>
