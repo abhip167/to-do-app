@@ -1,11 +1,14 @@
 # To-Do App by Abhishek Patel
 
-This is a To-Do App project submitted to Delasie Torkornoo.
+# Deployed version
 
-![Application homepage!](/documentation/homepage.png)
+[**Live Demo Url** ](https://link-url-here.org)
 
 # Features
 
+![Application homepage!](/documentation/homepage.png)
+
+This is a To-Do App project submitted to Delasie Torkornoo.
 The To-Do app contains basic implementation with below features :
 
 1. Read, Write and delete a task
@@ -39,6 +42,28 @@ The To-Do app contains basic implementation with below features :
 
 - We will generate build files in dist folder by running the command `npm run build`. Once done, we shall now see a dist folder with index.html file
 - In order to deploy, we can deploy it on static file server by simply copying the contents of the dist folder in the root of the server.
+
+![Application Flow Chart!](/documentation/github-action.png)
+
+- We have deployed the current application on azure, with the help of github actions which builds the project on each commit and deploys it to a static file server.
+
+## Build docker container
+
+- To build the docker image, we create a configuration file.
+- The file can be divided into two steps
+
+  1. Build the Vuejs project
+  2. Serve the project on NGINX
+
+- There is already a Dockerfile created in the project root.
+- We shall now build an image named To-Do-App-Vue with command
+
+  - `docker build -t to-do-app-vue .`
+  - (do not forget the dot at the end)
+
+- To start the container, run
+  - `docker run --rm -it -p 8080:80 to-do-app-vue`
+  - Change the port available according to your system the format is **_HostPort:ContainerPort_**
 
 ## Tech Stack
 
